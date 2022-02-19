@@ -4,3 +4,5 @@ main: rama.itemglow.ItemGlow
 api-version: 1.17
 authors: [ ImRama ]
 description: Item glowing util
+commands:
+  itemglow:
