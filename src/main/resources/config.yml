@@ -1,4 +1,9 @@
 Items:
-  example-item:
-    item-name: "" #This would make that any item without a custom name will glow white
+  example-item: #This would make that any item without a custom name will glow white
+    item-material: "any"
+    item-name: "any"
     glow-color: "WHITE" #https://hub.spigotmc.org/javadocs/spigot/org/bukkit/ChatColor.html
+  example-item2: #This would make that any item without a custom name will glow white
+    item-material: "DRAGON_EGG"
+    item-name: "any"
+    glow-color: "BLACK" #https://hub.spigotmc.org/javadocs/spigot/org/bukkit/ChatColor.html
