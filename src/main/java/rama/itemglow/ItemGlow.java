@@ -16,16 +16,16 @@ public final class ItemGlow extends JavaPlugin {
 
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new ItemDropEvent(this), this);
-        Bukkit.getLogger().severe("[ItemGlow] Cargando eventos...");
+        Bukkit.getLogger().severe("[ItemRarityGlow] Loading events...");
 
         config.options().copyDefaults(true);
         saveDefaultConfig();
 
-        this.getCommand("itemglow").setExecutor(new reloadCommand(this));
-        Bukkit.getLogger().severe("[ItemGlow] Cargando comandos...");
+        this.getCommand("irg").setExecutor(new reloadCommand(this));
+        Bukkit.getLogger().severe("[ItemRarityGlow] Loading commands...");
 
         RegisterTeams.registerTeams();
-        Bukkit.getLogger().severe("[ItemGlow] Registrando teams...");
+        Bukkit.getLogger().severe("[ItemRarityGlow] Loading colors...");
 
         this.reloadConfig();
     }

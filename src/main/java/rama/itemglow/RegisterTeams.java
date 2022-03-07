@@ -20,7 +20,6 @@ public class RegisterTeams {
     static Team team_GOLD;
     static Team team_GRAY;
     static Team team_GREEN;
-    //static Team team_LIGHT_PURPLE;
     static Team team_RED;
     static Team team_WHITE;
     static Team team_YELLOW;
@@ -111,13 +110,6 @@ public class RegisterTeams {
             team_GREEN = scoreboardManager.getMainScoreboard().getTeam("team_GREEN");
         }
         team_GREEN.setColor(ChatColor.GREEN);
-
-        //try {
-            //team_LIGHT_PURPLE = scoreboardManager.getMainScoreboard().registerNewTeam("team_LIGHT_PURPLE");
-        //} catch (IllegalArgumentException er) {
-            //team_LIGHT_PURPLE = scoreboardManager.getMainScoreboard().getTeam("team_LIGHT_PURPLE");
-        //}
-        //team_LIGHT_PURPLE.setColor(ChatColor.LIGHT_PURPLE);
 
         try {
             team_RED = scoreboardManager.getMainScoreboard().registerNewTeam("team_RED");

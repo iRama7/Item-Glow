@@ -17,7 +17,7 @@ public class reloadCommand implements CommandExecutor {
 
         if(args[0].equalsIgnoreCase("reload")){
             plugin.reloadConfig();
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&3&lITEMGLOW &cYou have successfully reloaded the plugin."));
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&3&lITEMRARITYGLOW &cYou have successfully reloaded the plugin."));
         }
         return false;
     }
