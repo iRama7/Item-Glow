@@ -1,9 +1,8 @@
-name: ItemGlow
+name: ItemRarityGlow
 version: '${project.version}'
 main: rama.itemglow.ItemGlow
 api-version: 1.17
 authors: [ ImRama ]
-description: Item glowing util
+description: Glow your items
 commands:
   irg:
-    reload:

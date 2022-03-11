@@ -15,7 +15,7 @@ public class reloadCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if(args[0].equalsIgnoreCase("reload")){
+        if(args[0].equalsIgnoreCase("reload") && sender.hasPermission("irg.admin")){
             plugin.reloadConfig();
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&3&lITEMRARITYGLOW &cYou have successfully reloaded the plugin."));
         }

@@ -2,12 +2,21 @@ Items:
   example-item: #This would make that any item without a custom name will glow WHITE
     item-material: "any"
     item-name: "any"
+    item-lore:
     glow-color: "WHITE"
   example-item2: #This would make that any DRAGON EGG item will glow DARK PURPLE
     item-material: "DRAGON_EGG"
     item-name: "any"
+    item-lore:
     glow-color: "DARK_PURPLE"
   example-item3: #This would make that any item with the name "Enchanted Wheat" in LIME color will glow RED
     item-material: "any"
     item-name: "&aEnchanted Wheat"
+    item-lore:
+    glow-color: "RED"
+  example-item4: #This would make that any item with the name "Enchanted Wheat" in LIME color and "Material" lore line will glow RED
+    item-material: "any"
+    item-name: "&aEnchanted Wheat"
+    item-lore:
+      - "&cMaterial"
     glow-color: "RED"
