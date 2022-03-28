@@ -17,6 +17,5 @@ Items:
   example-item4: #This would make that any item with the name "Enchanted Wheat" in LIME color and "Material" lore line will glow RED
     item-material: "any"
     item-name: "&aEnchanted Wheat"
-    item-lore:
-      - "&cMaterial"
+    item-lore: "&f&lCOMMON"
     glow-color: "RED"

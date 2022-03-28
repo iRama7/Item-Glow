@@ -1,15 +1,15 @@
 package rama.itemglow;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.List;
 
 import static rama.itemglow.RegisterTeams.*;
 
@@ -31,10 +31,15 @@ public final class ItemGlow extends JavaPlugin {
         saveDefaultConfig();
 
         sendLog("&eRegistering commands...");
-        this.getCommand("irg").setExecutor(new reloadCommand(this));
+        TabExecutor tabExecutor = new Commands(this);
+        this.getCommand("irg").setExecutor(tabExecutor);
+        this.getCommand("irg").setTabCompleter(tabExecutor);
 
         sendLog("&eRegistering color teams...");
         RegisterTeams.registerTeams();
+        int pluginId = 14779;
+        Metrics metrics = new Metrics(this, pluginId);
+
 
         this.reloadConfig();
     }
@@ -47,28 +52,27 @@ public final class ItemGlow extends JavaPlugin {
         return instance;
     }
 
-    public static void sendLog(String message){
+    public static void sendLog(String message) {
         String prefix = ChatColor.translateAlternateColorCodes('&', "&c[&3ItemRarityGlow&c] ");
-        Bukkit.getConsoleSender().sendMessage(prefix+ChatColor.translateAlternateColorCodes('&', message));
+        Bukkit.getConsoleSender().sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', message));
     }
 
-    //true true true
-    //true true false
+    public static void addGlow(Entity entity, ItemStack item, Material M, String N, String L, Boolean hasMaterial, Boolean hasName, Boolean hasLore, String glow_color){
+        Boolean matchMaterial = item.getType().equals(M);
+        Boolean matchName = item.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', N));
 
-    //true false true
-    //true false false
+        Boolean matchLore = false;
 
-    //false false false
-    //false false true
+        if(hasLore && item.getItemMeta().getLore() != null) {
+            matchLore = item.getItemMeta().getLore().contains(ChatColor.translateAlternateColorCodes('&', L));
+        }
 
-    //false true false
-    //false true true
-    public static void addGlow(Entity entity, ItemStack item, Material M, String N, List<String> L, Boolean hasMaterial, Boolean hasName, Boolean hasLore, String glow_color){
+
         if(hasMaterial){
             if(hasName){
                 if(hasLore){
                     if(item.getItemMeta().getLore() != null) {
-                        if (item.getType().equals(M) && item.getItemMeta().getDisplayName().equalsIgnoreCase(N) && item.getItemMeta().getLore().equals(L)) {
+                        if (matchMaterial && matchName && matchLore) {
                             switch (glow_color) {
                                 case "AQUA":
                                     team_AQUA.addEntry(entity.getUniqueId().toString());
@@ -135,7 +139,7 @@ public final class ItemGlow extends JavaPlugin {
                         }
                     }
                 }else{
-                    if(item.getType().equals(M) && item.getItemMeta().getDisplayName().equalsIgnoreCase(N)) {
+                    if(matchMaterial && matchName){
                         switch (glow_color) {
                             case "AQUA":
                                 team_AQUA.addEntry(entity.getUniqueId().toString());
@@ -204,7 +208,7 @@ public final class ItemGlow extends JavaPlugin {
             }else{
                 if(hasLore){
                     if(item.getItemMeta().getLore() != null) {
-                        if (item.getType().equals(M) && item.getItemMeta().getLore().equals(L)) {
+                        if (matchLore) {
                             switch (glow_color) {
                                 case "AQUA":
                                     team_AQUA.addEntry(entity.getUniqueId().toString());
@@ -271,7 +275,7 @@ public final class ItemGlow extends JavaPlugin {
                         }
                     }
                 }else{
-                    if(item.getType().equals(M)) {
+                    if(matchMaterial) {
                         switch (glow_color) {
                             case "AQUA":
                                 team_AQUA.addEntry(entity.getUniqueId().toString());
@@ -342,7 +346,7 @@ public final class ItemGlow extends JavaPlugin {
             if(hasName){
                 if(hasLore){
                     if(item.getItemMeta().getLore() != null) {
-                        if (item.getItemMeta().getLore().equals(L) && item.getItemMeta().getDisplayName().equalsIgnoreCase(N)) {
+                        if (matchName && matchLore) {
                             switch (glow_color) {
                                 case "AQUA":
                                     team_AQUA.addEntry(entity.getUniqueId().toString());
@@ -409,7 +413,7 @@ public final class ItemGlow extends JavaPlugin {
                         }
                     }
                 }else{
-                    if(item.getItemMeta().getDisplayName().equalsIgnoreCase(N)) {
+                    if(matchName) {
                         switch (glow_color) {
                             case "AQUA":
                                 team_AQUA.addEntry(entity.getUniqueId().toString());
@@ -478,7 +482,7 @@ public final class ItemGlow extends JavaPlugin {
             }else{
                 if(hasLore){
                     if(item.getItemMeta().getLore() != null) {
-                        if (item.getItemMeta().getLore().equals(L)) {
+                        if (matchLore) {
                             switch (glow_color) {
                                 case "AQUA":
                                     team_AQUA.addEntry(entity.getUniqueId().toString());
@@ -612,4 +616,17 @@ public final class ItemGlow extends JavaPlugin {
             }
         }
     }
+
+    public static String createItem(String config_name, String material_name, String item_displayname, String item_lore, String glow_color){
+        instance.getConfig().set("Items."+config_name, null);
+        instance.getConfig().set("Items."+config_name+".item-material", material_name);
+        instance.getConfig().set("Items."+config_name+".item-name", item_displayname);
+        instance.getConfig().set("Items."+config_name+".item-lore", item_lore);
+        instance.getConfig().set("Items."+config_name+".glow-color", glow_color);
+        instance.saveConfig();
+        instance.reloadConfig();
+        String message = "&3&lITEMRARITYGLOW &aYou have successfully defined a new glow rule in the plugin config.";
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
 }

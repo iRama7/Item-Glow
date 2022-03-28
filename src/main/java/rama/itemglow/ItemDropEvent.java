@@ -25,7 +25,7 @@ public class ItemDropEvent implements Listener {
             String item_name = plugin.getConfig().getString("Items." + string + ".item-name");
             String glow_color = plugin.getConfig().getString("Items." + string + ".glow-color");
             String material_id = plugin.getConfig().getString("Items." + string + ".item-material");
-            List<String> item_lore = plugin.getConfig().getStringList("Items." + string + ".item-lore");
+            String item_lore = plugin.getConfig().getString("Items." + string + ".item-lore");
 
             Boolean hasMaterial = false;
             Boolean hasName = false;
@@ -41,8 +41,9 @@ public class ItemDropEvent implements Listener {
             if (!item_name.equalsIgnoreCase("any")) {
                 hasName = true;
             }
-            if (!item_lore.isEmpty()) {
+            if (item_lore != null) {
                 hasLore = true;
+
             }
             if(!glowed) {
                 addGlow(e.getEntity(), e.getEntity().getItemStack(), M, item_name, item_lore, hasMaterial, hasName, hasLore, glow_color);
