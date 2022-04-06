@@ -6,7 +6,7 @@
 
     <groupId>rama</groupId>
     <artifactId>ItemRarityGlow</artifactId>
-    <version>2.5.4</version>
+    <version>2.7.5</version>
     <packaging>jar</packaging>
 
     <name>ItemRarityGlow</name>

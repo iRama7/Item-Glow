@@ -19,6 +19,10 @@ public class ItemDropEvent implements Listener {
 
     @EventHandler
     public void itemDropEvent(ItemSpawnEvent e) {
+        Boolean isEnabled = plugin.getConfig().getBoolean("Enabled");
+        if(!isEnabled){
+            return;
+        }
 
         for (String string : plugin.getConfig().getConfigurationSection("Items").getKeys(false)) {
 
@@ -26,6 +30,11 @@ public class ItemDropEvent implements Listener {
             String glow_color = plugin.getConfig().getString("Items." + string + ".glow-color");
             String material_id = plugin.getConfig().getString("Items." + string + ".item-material");
             String item_lore = plugin.getConfig().getString("Items." + string + ".item-lore");
+            Boolean low_priority = false;
+            if(plugin.getConfig().isSet("Items."+string+".low-priority")){
+               low_priority = plugin.getConfig().getBoolean("Items."+string+".low-priority");
+            }
+
 
             Boolean hasMaterial = false;
             Boolean hasName = false;
@@ -46,7 +55,7 @@ public class ItemDropEvent implements Listener {
 
             }
             if(!glowed) {
-                addGlow(e.getEntity(), e.getEntity().getItemStack(), M, item_name, item_lore, hasMaterial, hasName, hasLore, glow_color);
+                addGlow(e.getEntity(), e.getEntity().getItemStack(), M, item_name, item_lore, hasMaterial, hasName, hasLore, glow_color, low_priority);
             }
 
 

@@ -19,9 +19,25 @@ public final class ItemGlow extends JavaPlugin {
     private static ItemGlow instance;
     public static Boolean glowed = false;
 
+
     @Override
     public void onEnable() {
         instance = this;
+        new UpdateChecker(this, 99981).getVersion(version -> {
+            if (this.getDescription().getVersion().equals(version)) {
+                sendLog("&eYou are using the latest version.");
+            } else {
+                sendLog("&eThere is a new update available!");
+                sendLog("&eYour current version: "+"&c"+instance.getDescription().getVersion());
+                sendLog("&eLatest version: "+"&a"+version);
+            }
+        });
+
+        if(!instance.getConfig().isSet("Enabled")){
+            instance.getConfig().set("Enabled",true);
+            this.saveConfig();
+            this.reloadConfig();
+        }
 
         sendLog("&eRegistering listeners...");
         PluginManager pm = getServer().getPluginManager();
@@ -57,7 +73,7 @@ public final class ItemGlow extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', message));
     }
 
-    public static void addGlow(Entity entity, ItemStack item, Material M, String N, String L, Boolean hasMaterial, Boolean hasName, Boolean hasLore, String glow_color){
+    public static void addGlow(Entity entity, ItemStack item, Material M, String N, String L, Boolean hasMaterial, Boolean hasName, Boolean hasLore, String glow_color, Boolean low_priority){
         Boolean matchMaterial = item.getType().equals(M);
         Boolean matchName = item.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', N));
 
@@ -135,7 +151,9 @@ public final class ItemGlow extends JavaPlugin {
                                     entity.setGlowing(true);
                                     break;
                             }
-                            glowed = true;
+                            if(!low_priority){
+                                glowed = true;
+                            }
                         }
                     }
                 }else{
@@ -202,7 +220,9 @@ public final class ItemGlow extends JavaPlugin {
                                 entity.setGlowing(true);
                                 break;
                         }
-                        glowed = true;
+                        if(!low_priority){
+                            glowed = true;
+                        }
                     }
                 }
             }else{
@@ -271,7 +291,9 @@ public final class ItemGlow extends JavaPlugin {
                                     entity.setGlowing(true);
                                     break;
                             }
-                            glowed = true;
+                            if(!low_priority){
+                                glowed = true;
+                            }
                         }
                     }
                 }else{
@@ -338,7 +360,9 @@ public final class ItemGlow extends JavaPlugin {
                                 entity.setGlowing(true);
                                 break;
                         }
-                        glowed = true;
+                        if(!low_priority){
+                            glowed = true;
+                        }
                     }
                 }
             }
@@ -409,7 +433,9 @@ public final class ItemGlow extends JavaPlugin {
                                     entity.setGlowing(true);
                                     break;
                             }
-                            glowed = true;
+                            if(!low_priority){
+                                glowed = true;
+                            }
                         }
                     }
                 }else{
@@ -476,7 +502,9 @@ public final class ItemGlow extends JavaPlugin {
                                 entity.setGlowing(true);
                                 break;
                         }
-                        glowed = true;
+                        if(!low_priority){
+                            glowed = true;
+                        }
                     }
                 }
             }else{
@@ -545,7 +573,9 @@ public final class ItemGlow extends JavaPlugin {
                                     entity.setGlowing(true);
                                     break;
                             }
-                            glowed = true;
+                            if(!low_priority){
+                                glowed = true;
+                            }
                         }
                     }
                 }else{
@@ -611,7 +641,9 @@ public final class ItemGlow extends JavaPlugin {
                                     entity.setGlowing(true);
                                     break;
                             }
-                    glowed = true;
+                    if(!low_priority){
+                        glowed = true;
+                    }
                 }
             }
         }
