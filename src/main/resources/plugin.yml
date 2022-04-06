@@ -4,5 +4,8 @@ main: rama.itemglow.ItemGlow
 api-version: 1.13
 authors: [ ImRama ]
 description: Glow your items
+softdepend:
+  - MythicLib
+  - item-nbt-api
 commands:
   irg:

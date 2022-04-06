@@ -6,7 +6,7 @@
 
     <groupId>rama</groupId>
     <artifactId>ItemRarityGlow</artifactId>
-    <version>2.5.4</version>
+    <version>3.1.1</version>
     <packaging>jar</packaging>
 
     <name>ItemRarityGlow</name>
@@ -83,6 +83,15 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>lumine-repo</id>
+            <url>https://mvn.lumine.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.org/repository/maven-public/</url>
+            <layout>default</layout>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -97,6 +106,17 @@
             <artifactId>bstats-bukkit</artifactId>
             <version>3.0.0</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.tr7zw</groupId>
+            <artifactId>item-nbt-api-plugin</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.lumine</groupId>
+            <artifactId>MythicLib</artifactId>
+            <version>1.0.17</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

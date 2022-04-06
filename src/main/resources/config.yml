@@ -1,9 +1,11 @@
+Enabled: true #Enable/Disable the itemglow.
 Items:
   example-item: #This would make that any item without a custom name will glow WHITE
     item-material: "any"
     item-name: "any"
     item-lore:
     glow-color: "WHITE"
+    low-priority: true
   example-item2: #This would make that any DRAGON EGG item will glow DARK PURPLE
     item-material: "DRAGON_EGG"
     item-name: "any"
