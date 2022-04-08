@@ -20,6 +20,10 @@ public class ItemDropEvent implements Listener {
 
     @EventHandler
     public void itemDropEvent(ItemSpawnEvent e) {
+        Boolean isEnabled = plugin.getConfig().getBoolean("Enabled");
+        if(!isEnabled){
+            return;
+        }
 
         if(mmoHook){
             io.lumine.mythic.lib.api.item.NBTItem nbtItem = io.lumine.mythic.lib.api.item.NBTItem.get(e.getEntity().getItemStack());

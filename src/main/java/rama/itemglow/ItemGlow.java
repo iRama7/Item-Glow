@@ -21,9 +21,25 @@ public final class ItemGlow extends JavaPlugin {
     public static Boolean mmoHook;
     public static boolean nbtHook;
 
+
     @Override
     public void onEnable() {
         instance = this;
+        new UpdateChecker(this, 99981).getVersion(version -> {
+            if (this.getDescription().getVersion().equals(version)) {
+                sendLog("&eYou are using the latest version.");
+            } else {
+                sendLog("&eThere is a new update available!");
+                sendLog("&eYour current version: "+"&c"+instance.getDescription().getVersion());
+                sendLog("&eLatest version: "+"&a"+version);
+            }
+        });
+
+        if(!instance.getConfig().isSet("Enabled")){
+            instance.getConfig().set("Enabled",true);
+            this.saveConfig();
+            this.reloadConfig();
+        }
 
         new UpdateChecker(this, 99981).getVersion(version -> {
             if (this.getDescription().getVersion().equals(version)) {
