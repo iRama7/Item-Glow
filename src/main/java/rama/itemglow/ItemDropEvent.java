@@ -48,7 +48,7 @@ public class ItemDropEvent implements Listener {
             return;
         }
 
-        Boolean isEnabled = plugin.getConfig().getBoolean("Enabled");
+        isEnabled = plugin.getConfig().getBoolean("Enabled");
         if(!isEnabled){
             return;
         }
