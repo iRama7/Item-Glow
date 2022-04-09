@@ -35,11 +35,6 @@ public final class ItemGlow extends JavaPlugin {
             }
         });
 
-        if(!instance.getConfig().isSet("Enabled")){
-            instance.getConfig().set("Enabled",true);
-            this.saveConfig();
-            this.reloadConfig();
-        }
 
         new UpdateChecker(this, 99981).getVersion(version -> {
             if (this.getDescription().getVersion().equals(version)) {
