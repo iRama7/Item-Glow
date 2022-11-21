@@ -1,12 +1,14 @@
 package rama.itemglow;
 
 import de.tr7zw.nbtapi.NBTItem;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemSpawnEvent;
 
-import java.util.List;
 
 import static rama.itemglow.ItemGlow.*;
 
@@ -20,8 +22,13 @@ public class ItemDropEvent implements Listener {
 
     @EventHandler
     public void itemDropEvent(ItemSpawnEvent e) {
+
+
         Boolean isEnabled = plugin.getConfig().getBoolean("Enabled");
         if(!isEnabled){
+            return;
+        }
+        if(e.getEntity().getItemStack().getType() == Material.AIR){
             return;
         }
 
@@ -29,28 +36,23 @@ public class ItemDropEvent implements Listener {
             io.lumine.mythic.lib.api.item.NBTItem nbtItem = io.lumine.mythic.lib.api.item.NBTItem.get(e.getEntity().getItemStack());
             if(nbtItem.hasType()){
                 if(nbtItem.hasTag("Glow")){
-                    addDirectGLow(e.getEntity(), nbtItem.getString("Glow"));
+                    plugin.addDirectGLow(e.getEntity(), nbtItem.getString("Glow"));
+                    glowed = true;
                 }
             }else if(nbtHook){
                 NBTItem nbti = new NBTItem(e.getEntity().getItemStack());
                 if(nbti.hasKey("Glow")) {
-                    addDirectGLow(e.getEntity(), nbtItem.getString("Glow"));
+                    plugin.addDirectGLow(e.getEntity(), nbtItem.getString("Glow"));
+                    glowed = true;
                 }
             }
         }
         if(nbtHook){
             NBTItem nbti = new NBTItem(e.getEntity().getItemStack());
             if(nbti.hasKey("Glow")) {
-                addDirectGLow(e.getEntity(), nbti.getString("Glow"));
+                plugin.addDirectGLow(e.getEntity(), nbti.getString("Glow"));
+                glowed = true;
             }
-        }
-        if(glowed = true){
-            return;
-        }
-
-        isEnabled = plugin.getConfig().getBoolean("Enabled");
-        if(!isEnabled){
-            return;
         }
 
         for (String string : plugin.getConfig().getConfigurationSection("Items").getKeys(false)) {
@@ -84,7 +86,7 @@ public class ItemDropEvent implements Listener {
 
             }
             if(!glowed) {
-                addGlow(e.getEntity(), e.getEntity().getItemStack(), M, item_name, item_lore, hasMaterial, hasName, hasLore, glow_color, low_priority);
+                plugin.addGlow(e.getEntity(), e.getEntity().getItemStack(), M, item_name, item_lore, hasMaterial, hasName, hasLore, glow_color, low_priority);
             }
 
 

@@ -136,4 +136,22 @@ public class RegisterTeams {
 
 
     }
+    static void unregisterTeams(){
+        ScoreboardManager scoreboardManager = getInstance().getServer().getScoreboardManager();
+        scoreboardManager.getMainScoreboard().getTeam("team_AQUA").unregister();
+        scoreboardManager.getMainScoreboard().getTeam("team_BLACK").unregister();
+        scoreboardManager.getMainScoreboard().getTeam("team_BLUE").unregister();
+        scoreboardManager.getMainScoreboard().getTeam("team_DARK_AQUA").unregister();
+        scoreboardManager.getMainScoreboard().getTeam("team_DARK_BLUE").unregister();
+        scoreboardManager.getMainScoreboard().getTeam("team_DARK_GRAY").unregister();
+        scoreboardManager.getMainScoreboard().getTeam("team_DARK_GREEN").unregister();
+        scoreboardManager.getMainScoreboard().getTeam("team_DARK_PURPLE").unregister();
+        scoreboardManager.getMainScoreboard().getTeam("team_DARK_RED").unregister();
+        scoreboardManager.getMainScoreboard().getTeam("team_GOLD").unregister();
+        scoreboardManager.getMainScoreboard().getTeam("team_GRAY").unregister();
+        scoreboardManager.getMainScoreboard().getTeam("team_GREEN").unregister();
+        scoreboardManager.getMainScoreboard().getTeam("team_RED").unregister();
+        scoreboardManager.getMainScoreboard().getTeam("team_WHITE").unregister();
+        scoreboardManager.getMainScoreboard().getTeam("team_YELLOW").unregister();
+    }
 }

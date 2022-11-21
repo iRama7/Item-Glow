@@ -5,11 +5,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Team;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import static rama.itemglow.RegisterTeams.*;
 
@@ -22,20 +31,14 @@ public final class ItemGlow extends JavaPlugin {
     public static boolean nbtHook;
 
 
+
+    private File languageFile;
+    private FileConfiguration language;
+
+
     @Override
     public void onEnable() {
         instance = this;
-        new UpdateChecker(this, 99981).getVersion(version -> {
-            if (this.getDescription().getVersion().equals(version)) {
-                sendLog("&eYou are using the latest version.");
-            } else {
-                sendLog("&eThere is a new update available!");
-                sendLog("&eYour current version: "+"&c"+instance.getDescription().getVersion());
-                sendLog("&eLatest version: "+"&a"+version);
-            }
-        });
-
-
         new UpdateChecker(this, 99981).getVersion(version -> {
             if (this.getDescription().getVersion().equals(version)) {
                 sendLog("&eYou are using the latest version.");
@@ -62,14 +65,34 @@ public final class ItemGlow extends JavaPlugin {
         Metrics metrics = new Metrics(this, pluginId);
         checkHooks();
         this.reloadConfig();
+        try {
+            createLanguageFile();
+        } catch (IOException | InvalidConfigurationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void onDisable() {
+        unregisterTeams();
     }
 
     public static ItemGlow getInstance() {
         return instance;
+    }
+
+    public FileConfiguration getLanguage(){
+        return this.language;
+    }
+
+    public void createLanguageFile() throws IOException, InvalidConfigurationException {
+        languageFile = new File(getDataFolder(), "language.yml");
+        if(!languageFile.exists()){
+            languageFile.getParentFile().mkdirs();
+            saveResource("language.yml", false);
+        }
+        language = new YamlConfiguration();
+        language.load(languageFile);
     }
 
     public static void sendLog(String message) {
@@ -77,14 +100,37 @@ public final class ItemGlow extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage(prefix + ChatColor.translateAlternateColorCodes('&', message));
     }
 
-    public static void addGlow(Entity entity, ItemStack item, Material M, String N, String L, Boolean hasMaterial, Boolean hasName, Boolean hasLore, String glow_color, Boolean low_priority){
+    public void addGlow(Entity entity, ItemStack item, Material M, String N, String L, Boolean hasMaterial, Boolean hasName, Boolean hasLore, String glow_color, Boolean low_priority){
+        String flashy_color = null;
+        if(glow_color.contains("FLASHY")){
+            //separate the string between "-"
+            String[] split = glow_color.split("-");
+            flashy_color = split[1];
+            glow_color = "FLASHY";
+        }
         Boolean matchMaterial = item.getType().equals(M);
         Boolean matchName = item.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', N));
 
         Boolean matchLore = false;
 
         if(hasLore && item.getItemMeta().getLore() != null) {
-            matchLore = item.getItemMeta().getLore().contains(ChatColor.translateAlternateColorCodes('&', L));
+            List<String> lore = item.getItemMeta().getLore();
+            if(L.contains("\n")){
+                String[] split = L.split(" \n ");
+                for(String s : split){
+                    if(lore.contains(ChatColor.translateAlternateColorCodes('&', s))){
+                        matchLore = true;
+                        Bukkit.getLogger().warning("0" + s);
+                    }else{
+                        matchLore = false;
+                        Bukkit.getLogger().warning("1" + s);
+                        break;
+                    }
+                }
+            }else {
+                matchLore = item.getItemMeta().getLore().contains(ChatColor.translateAlternateColorCodes('&', L));
+                Bukkit.getLogger().warning("2" + L);
+            }
         }
 
 
@@ -154,6 +200,15 @@ public final class ItemGlow extends JavaPlugin {
                                     team_YELLOW.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
+                                case "RAINBOW":
+                                    setRainbow(entity);
+                                    break;
+                                case "FLASHY":
+                                    if(flashy_color == null){
+                                        flashy_color = "WHITE";
+                                    }
+                                    setFlashy(entity, flashy_color);
+                                    break;
                             }
                             if(!low_priority){
                                 glowed = true;
@@ -222,6 +277,15 @@ public final class ItemGlow extends JavaPlugin {
                             case "YELLOW":
                                 team_YELLOW.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
+                                break;
+                            case "RAINBOW":
+                                setRainbow(entity);
+                                break;
+                            case "FLASHY":
+                                if(flashy_color == null){
+                                    flashy_color = "WHITE";
+                                }
+                                setFlashy(entity, flashy_color);
                                 break;
                         }
                         if(!low_priority){
@@ -294,6 +358,15 @@ public final class ItemGlow extends JavaPlugin {
                                     team_YELLOW.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
+                                case "RAINBOW":
+                                    setRainbow(entity);
+                                    break;
+                                case "FLASHY":
+                                    if(flashy_color == null){
+                                        flashy_color = "WHITE";
+                                    }
+                                    setFlashy(entity, flashy_color);
+                                    break;
                             }
                             if(!low_priority){
                                 glowed = true;
@@ -362,6 +435,15 @@ public final class ItemGlow extends JavaPlugin {
                             case "YELLOW":
                                 team_YELLOW.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
+                                break;
+                            case "RAINBOW":
+                                setRainbow(entity);
+                                break;
+                            case "FLASHY":
+                                if(flashy_color == null){
+                                    flashy_color = "WHITE";
+                                }
+                                setFlashy(entity, flashy_color);
                                 break;
                         }
                         if(!low_priority){
@@ -436,6 +518,15 @@ public final class ItemGlow extends JavaPlugin {
                                     team_YELLOW.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
+                                case "RAINBOW":
+                                    setRainbow(entity);
+                                    break;
+                                case "FLASHY":
+                                    if(flashy_color == null){
+                                        flashy_color = "WHITE";
+                                    }
+                                    setFlashy(entity, flashy_color);
+                                    break;
                             }
                             if(!low_priority){
                                 glowed = true;
@@ -504,6 +595,15 @@ public final class ItemGlow extends JavaPlugin {
                             case "YELLOW":
                                 team_YELLOW.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
+                                break;
+                            case "RAINBOW":
+                                setRainbow(entity);
+                                break;
+                            case "FLASHY":
+                                if(flashy_color == null){
+                                    flashy_color = "WHITE";
+                                }
+                                setFlashy(entity, flashy_color);
                                 break;
                         }
                         if(!low_priority){
@@ -576,6 +676,15 @@ public final class ItemGlow extends JavaPlugin {
                                     team_YELLOW.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
+                                case "RAINBOW":
+                                    setRainbow(entity);
+                                    break;
+                                case "FLASHY":
+                                    if(flashy_color == null){
+                                        flashy_color = "WHITE";
+                                    }
+                                    setFlashy(entity, flashy_color);
+                                    break;
                             }
                             if(!low_priority){
                                 glowed = true;
@@ -644,6 +753,15 @@ public final class ItemGlow extends JavaPlugin {
                                     team_YELLOW.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
+                                case "RAINBOW":
+                                    setRainbow(entity);
+                                    break;
+                                case "FLASHY":
+                                    if(flashy_color == null){
+                                        flashy_color = "WHITE";
+                                    }
+                                    setFlashy(entity, flashy_color);
+                                    break;
                             }
                     if(!low_priority){
                         glowed = true;
@@ -667,23 +785,30 @@ public final class ItemGlow extends JavaPlugin {
 
     public void checkHooks(){
         if(Bukkit.getPluginManager().getPlugin("MythicLib") == null){
-            sendLog("MythicLib not found");
-            sendLog("Disabling MMOItems hook.");
+            sendLog("MythicLib not found, disabling MMOItems hook.");
             mmoHook = false;
         }else{
-            sendLog("Enabling MMOItems hook.");
+            sendLog("&aEnabling MMOItems hook.");
             mmoHook = true;
         }
-        if(Bukkit.getPluginManager().getPlugin("item-nbt-api") == null){
-            sendLog("item-nbt-api not found");
-            sendLog("Disabling custom NBTTags support.");
+        if(Bukkit.getPluginManager().getPlugin("NBTAPI") == null){
+            sendLog("item-nbt-api not found, disabling custom NBTTags support.");
             nbtHook = false;
         }else{
-            sendLog("Enabling custom NBTTags support.");
+            sendLog("&aEnabling custom NBTTags support.");
             nbtHook = true;
         }
     }
-    public static void addDirectGLow(Entity entity, String glow_color){
+    public void addDirectGLow(Entity entity, String glow_color){
+
+        String flashy_color = null;
+        if(glow_color.contains("FLASHY")){
+            //separate the string between "-"
+            String[] split = glow_color.split("-");
+            flashy_color = split[1];
+            glow_color = "FLASHY";
+        }
+
         switch (glow_color) {
             case "AQUA":
                 team_AQUA.addEntry(entity.getUniqueId().toString());
@@ -745,7 +870,68 @@ public final class ItemGlow extends JavaPlugin {
                 team_YELLOW.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
+            case "RAINBOW":
+                setRainbow(entity);
+                break;
+            case "FLASHY":
+                if(flashy_color == null){
+                    flashy_color = "WHITE";
+                }
+                setFlashy(entity, flashy_color);
+                break;
         }
+    }
+
+    public void setRainbow(Entity e){
+        List<Team> teams = new ArrayList<>();
+        teams.add(team_AQUA);
+        teams.add(team_BLUE);
+        teams.add(team_DARK_AQUA);
+        teams.add(team_DARK_BLUE);
+        teams.add(team_DARK_GREEN);
+        teams.add(team_DARK_PURPLE);
+        teams.add(team_DARK_RED);
+        teams.add(team_GOLD);
+        teams.add(team_GREEN);
+        teams.add(team_RED);
+        teams.add(team_YELLOW);
+        e.setGlowing(true);
+        Random random = new Random();
+        int interval = this.getConfig().getInt("rainbow-interval");
+        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, new Runnable() {
+            @Override
+            public void run() {
+                int i = random.nextInt(0, teams.size()-1);
+                if(teams.get(i).hasEntry(e.getUniqueId().toString())){
+                    i = random.nextInt(0, teams.size()-1);
+                }
+                teams.get(i).addEntry(e.getUniqueId().toString());
+                e.setGlowing(true);
+            }
+        }, 0, interval);
+    }
+
+    public void setFlashy(Entity e, String color){
+        int interval = this.getConfig().getInt("flashy-interval");
+        String team_name = "team_" + color;
+        Team team = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(team_name);
+        team.addEntry(e.getUniqueId().toString());
+        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, new Runnable() {
+            @Override
+            public void run() {
+                if(e.isGlowing()){
+                    if(team.hasEntry(e.getUniqueId().toString())){
+                        team.removeEntry(e.getUniqueId().toString());
+                    }
+                    e.setGlowing(false);
+                }else{
+                    if(!team.hasEntry(e.getUniqueId().toString())) {
+                        team.addEntry(e.getUniqueId().toString());
+                        e.setGlowing(true);
+                    }
+                }
+            }
+        }, 0, interval);
     }
 
 }

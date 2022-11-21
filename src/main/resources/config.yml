@@ -1,4 +1,6 @@
 Enabled: true #Enable/Disable the itemglow.
+flashy-interval: 5 #The interval of the flash effect in ticks.
+rainbow-interval: 5 #The interval of the rainbow effect in ticks.
 Items:
   example-item: #This would make that any item without a custom name will glow WHITE
     item-material: "any"
@@ -21,3 +23,13 @@ Items:
     item-name: "&aEnchanted Wheat"
     item-lore: "&f&lCOMMON"
     glow-color: "RED"
+  example-item5: #This would make that any item with the name "Enchanted Wheat" in LIME color and "Material" lore line will glow RED
+    item-material: "DIAMOND_SWORD"
+    item-name: "any"
+    item-lore: "any"
+    glow-color: "RAINBOW"
+  example-item6: #This would make that any item with the name "Enchanted Wheat" in LIME color and "Material" lore line will glow RED
+    item-material: "GRASS_BLOCK"
+    item-name: "any"
+    item-lore: "any"
+    glow-color: "FLASHY-RED"

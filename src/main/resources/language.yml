@@ -1,0 +1,12 @@
+prefix: "&3&lITEMRARITYGLOW "
+use:
+  - "&c- /irg reload &7(Reload the glow rules)"
+  - "&c- /irg addGlowRule <config-name> <glow-color> &7(Add a new glow rule)"
+  - "&c- /irg toggle &7(Toggles on/off the glow for all players)"
+reload: "&cYou have successfully reloaded the plugin."
+args: "&c&lERROR &eIncorrect number of arguments."
+already-defined: "&c&lERROR &eThis item is already defined in config."
+holding-air: "&c&lERROR &eYou are not holding any item!"
+non-existent-color: "&c&lERROR &eThis glow color does not exist! (&c%glow_color%&e)"
+toggle-off: "&eYou have toggled the glow &cOFF&e."
+toggle-on: "&eYou have toggled the glow &aON&e."
