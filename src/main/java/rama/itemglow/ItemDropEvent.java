@@ -1,10 +1,7 @@
 package rama.itemglow;
 
-import de.tr7zw.nbtapi.NBTItem;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemSpawnEvent;

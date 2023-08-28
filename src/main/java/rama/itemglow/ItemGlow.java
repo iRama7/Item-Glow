@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static rama.itemglow.RegisterTeams.*;
 
 public final class ItemGlow extends JavaPlugin {
 
@@ -34,11 +33,13 @@ public final class ItemGlow extends JavaPlugin {
 
     private File languageFile;
     private FileConfiguration language;
+    static ScoreboardManager scoreboardManager;
 
 
     @Override
     public void onEnable() {
         instance = this;
+        scoreboardManager = new ScoreboardManager();
         new UpdateChecker(this, 99981).getVersion(version -> {
             if (this.getDescription().getVersion().equals(version)) {
                 sendLog("&eYou are using the latest version.");
@@ -52,6 +53,7 @@ public final class ItemGlow extends JavaPlugin {
         sendLog("&eRegistering listeners...");
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new ItemDropEvent(this), this);
+        pm.registerEvents(new PlayerJoinEvent(), this);
 
         config.options().copyDefaults(true);
         saveDefaultConfig();
@@ -60,7 +62,7 @@ public final class ItemGlow extends JavaPlugin {
         this.getCommand("irg").setExecutor(tabExecutor);
         this.getCommand("irg").setTabCompleter(tabExecutor);
         sendLog("&eRegistering color teams...");
-        RegisterTeams.registerTeams();
+        scoreboardManager.registerTeams();
         int pluginId = 14779;
         Metrics metrics = new Metrics(this, pluginId);
         checkHooks();
@@ -74,7 +76,7 @@ public final class ItemGlow extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        unregisterTeams();
+        scoreboardManager.unregisterTeams();
     }
 
     public static ItemGlow getInstance() {
@@ -120,16 +122,13 @@ public final class ItemGlow extends JavaPlugin {
                 for(String s : split){
                     if(lore.contains(ChatColor.translateAlternateColorCodes('&', s))){
                         matchLore = true;
-                        Bukkit.getLogger().warning("0" + s);
                     }else{
                         matchLore = false;
-                        Bukkit.getLogger().warning("1" + s);
                         break;
                     }
                 }
             }else {
                 matchLore = item.getItemMeta().getLore().contains(ChatColor.translateAlternateColorCodes('&', L));
-                Bukkit.getLogger().warning("2" + L);
             }
         }
 
@@ -141,63 +140,63 @@ public final class ItemGlow extends JavaPlugin {
                         if (matchMaterial && matchName && matchLore) {
                             switch (glow_color) {
                                 case "AQUA":
-                                    team_AQUA.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_AQUA.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "BLACK":
-                                    team_BLACK.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_BLACK.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "BLUE":
-                                    team_BLUE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_BLUE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_AQUA":
-                                    team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_BLUE":
-                                    team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_GRAY":
-                                    team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_GREEN":
-                                    team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_PURPLE":
-                                    team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_RED":
-                                    team_DARK_RED.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_RED.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GOLD":
-                                    team_GOLD.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GOLD.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GRAY":
-                                    team_GRAY.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GRAY.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GREEN":
-                                    team_GREEN.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GREEN.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "RED":
-                                    team_RED.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_RED.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "WHITE":
-                                    team_WHITE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_WHITE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "YELLOW":
-                                    team_YELLOW.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_YELLOW.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "RAINBOW":
@@ -219,63 +218,63 @@ public final class ItemGlow extends JavaPlugin {
                     if(matchMaterial && matchName){
                         switch (glow_color) {
                             case "AQUA":
-                                team_AQUA.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_AQUA.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "BLACK":
-                                team_BLACK.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_BLACK.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "BLUE":
-                                team_BLUE.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_BLUE.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_AQUA":
-                                team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_BLUE":
-                                team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_GRAY":
-                                team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_GREEN":
-                                team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_PURPLE":
-                                team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_RED":
-                                team_DARK_RED.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_RED.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "GOLD":
-                                team_GOLD.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_GOLD.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "GRAY":
-                                team_GRAY.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_GRAY.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "GREEN":
-                                team_GREEN.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_GREEN.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "RED":
-                                team_RED.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_RED.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "WHITE":
-                                team_WHITE.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_WHITE.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "YELLOW":
-                                team_YELLOW.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_YELLOW.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "RAINBOW":
@@ -299,63 +298,63 @@ public final class ItemGlow extends JavaPlugin {
                         if (matchLore) {
                             switch (glow_color) {
                                 case "AQUA":
-                                    team_AQUA.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_AQUA.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "BLACK":
-                                    team_BLACK.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_BLACK.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "BLUE":
-                                    team_BLUE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_BLUE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_AQUA":
-                                    team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_BLUE":
-                                    team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_GRAY":
-                                    team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_GREEN":
-                                    team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_PURPLE":
-                                    team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_RED":
-                                    team_DARK_RED.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_RED.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GOLD":
-                                    team_GOLD.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GOLD.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GRAY":
-                                    team_GRAY.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GRAY.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GREEN":
-                                    team_GREEN.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GREEN.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "RED":
-                                    team_RED.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_RED.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "WHITE":
-                                    team_WHITE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_WHITE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "YELLOW":
-                                    team_YELLOW.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_YELLOW.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "RAINBOW":
@@ -377,63 +376,63 @@ public final class ItemGlow extends JavaPlugin {
                     if(matchMaterial) {
                         switch (glow_color) {
                             case "AQUA":
-                                team_AQUA.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_AQUA.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "BLACK":
-                                team_BLACK.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_BLACK.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "BLUE":
-                                team_BLUE.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_BLUE.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_AQUA":
-                                team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_BLUE":
-                                team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_GRAY":
-                                team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_GREEN":
-                                team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_PURPLE":
-                                team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_RED":
-                                team_DARK_RED.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_RED.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "GOLD":
-                                team_GOLD.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_GOLD.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "GRAY":
-                                team_GRAY.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_GRAY.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "GREEN":
-                                team_GREEN.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_GREEN.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "RED":
-                                team_RED.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_RED.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "WHITE":
-                                team_WHITE.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_WHITE.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "YELLOW":
-                                team_YELLOW.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_YELLOW.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "RAINBOW":
@@ -459,63 +458,63 @@ public final class ItemGlow extends JavaPlugin {
                         if (matchName && matchLore) {
                             switch (glow_color) {
                                 case "AQUA":
-                                    team_AQUA.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_AQUA.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "BLACK":
-                                    team_BLACK.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_BLACK.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "BLUE":
-                                    team_BLUE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_BLUE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_AQUA":
-                                    team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_BLUE":
-                                    team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_GRAY":
-                                    team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_GREEN":
-                                    team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_PURPLE":
-                                    team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_RED":
-                                    team_DARK_RED.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_RED.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GOLD":
-                                    team_GOLD.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GOLD.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GRAY":
-                                    team_GRAY.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GRAY.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GREEN":
-                                    team_GREEN.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GREEN.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "RED":
-                                    team_RED.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_RED.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "WHITE":
-                                    team_WHITE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_WHITE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "YELLOW":
-                                    team_YELLOW.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_YELLOW.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "RAINBOW":
@@ -537,63 +536,63 @@ public final class ItemGlow extends JavaPlugin {
                     if(matchName) {
                         switch (glow_color) {
                             case "AQUA":
-                                team_AQUA.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_AQUA.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "BLACK":
-                                team_BLACK.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_BLACK.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "BLUE":
-                                team_BLUE.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_BLUE.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_AQUA":
-                                team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_BLUE":
-                                team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_GRAY":
-                                team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_GREEN":
-                                team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_PURPLE":
-                                team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "DARK_RED":
-                                team_DARK_RED.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_DARK_RED.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "GOLD":
-                                team_GOLD.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_GOLD.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "GRAY":
-                                team_GRAY.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_GRAY.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "GREEN":
-                                team_GREEN.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_GREEN.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "RED":
-                                team_RED.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_RED.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "WHITE":
-                                team_WHITE.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_WHITE.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "YELLOW":
-                                team_YELLOW.addEntry(entity.getUniqueId().toString());
+                                scoreboardManager.team_YELLOW.addEntry(entity.getUniqueId().toString());
                                 entity.setGlowing(true);
                                 break;
                             case "RAINBOW":
@@ -617,63 +616,63 @@ public final class ItemGlow extends JavaPlugin {
                         if (matchLore) {
                             switch (glow_color) {
                                 case "AQUA":
-                                    team_AQUA.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_AQUA.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "BLACK":
-                                    team_BLACK.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_BLACK.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "BLUE":
-                                    team_BLUE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_BLUE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_AQUA":
-                                    team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_BLUE":
-                                    team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_GRAY":
-                                    team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_GREEN":
-                                    team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_PURPLE":
-                                    team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_RED":
-                                    team_DARK_RED.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_RED.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GOLD":
-                                    team_GOLD.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GOLD.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GRAY":
-                                    team_GRAY.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GRAY.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GREEN":
-                                    team_GREEN.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GREEN.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "RED":
-                                    team_RED.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_RED.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "WHITE":
-                                    team_WHITE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_WHITE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "YELLOW":
-                                    team_YELLOW.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_YELLOW.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "RAINBOW":
@@ -694,63 +693,63 @@ public final class ItemGlow extends JavaPlugin {
                 }else{
                     switch (glow_color) {
                                 case "AQUA":
-                                    team_AQUA.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_AQUA.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "BLACK":
-                                    team_BLACK.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_BLACK.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "BLUE":
-                                    team_BLUE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_BLUE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_AQUA":
-                                    team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_BLUE":
-                                    team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_GRAY":
-                                    team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_GREEN":
-                                    team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_PURPLE":
-                                    team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "DARK_RED":
-                                    team_DARK_RED.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_DARK_RED.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GOLD":
-                                    team_GOLD.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GOLD.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GRAY":
-                                    team_GRAY.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GRAY.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "GREEN":
-                                    team_GREEN.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_GREEN.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "RED":
-                                    team_RED.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_RED.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "WHITE":
-                                    team_WHITE.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_WHITE.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "YELLOW":
-                                    team_YELLOW.addEntry(entity.getUniqueId().toString());
+                                    scoreboardManager.team_YELLOW.addEntry(entity.getUniqueId().toString());
                                     entity.setGlowing(true);
                                     break;
                                 case "RAINBOW":
@@ -811,63 +810,63 @@ public final class ItemGlow extends JavaPlugin {
 
         switch (glow_color) {
             case "AQUA":
-                team_AQUA.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_AQUA.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "BLACK":
-                team_BLACK.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_BLACK.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "BLUE":
-                team_BLUE.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_BLUE.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "DARK_AQUA":
-                team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_DARK_AQUA.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "DARK_BLUE":
-                team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_DARK_BLUE.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "DARK_GRAY":
-                team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_DARK_GRAY.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "DARK_GREEN":
-                team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_DARK_GREEN.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "DARK_PURPLE":
-                team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_DARK_PURPLE.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "DARK_RED":
-                team_DARK_RED.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_DARK_RED.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "GOLD":
-                team_GOLD.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_GOLD.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "GRAY":
-                team_GRAY.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_GRAY.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "GREEN":
-                team_GREEN.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_GREEN.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "RED":
-                team_RED.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_RED.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "WHITE":
-                team_WHITE.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_WHITE.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "YELLOW":
-                team_YELLOW.addEntry(entity.getUniqueId().toString());
+                scoreboardManager.team_YELLOW.addEntry(entity.getUniqueId().toString());
                 entity.setGlowing(true);
                 break;
             case "RAINBOW":
@@ -884,17 +883,17 @@ public final class ItemGlow extends JavaPlugin {
 
     public void setRainbow(Entity e){
         List<Team> teams = new ArrayList<>();
-        teams.add(team_AQUA);
-        teams.add(team_BLUE);
-        teams.add(team_DARK_AQUA);
-        teams.add(team_DARK_BLUE);
-        teams.add(team_DARK_GREEN);
-        teams.add(team_DARK_PURPLE);
-        teams.add(team_DARK_RED);
-        teams.add(team_GOLD);
-        teams.add(team_GREEN);
-        teams.add(team_RED);
-        teams.add(team_YELLOW);
+        teams.add(scoreboardManager.team_AQUA);
+        teams.add(scoreboardManager.team_BLUE);
+        teams.add(scoreboardManager.team_DARK_AQUA);
+        teams.add(scoreboardManager.team_DARK_BLUE);
+        teams.add(scoreboardManager.team_DARK_GREEN);
+        teams.add(scoreboardManager.team_DARK_PURPLE);
+        teams.add(scoreboardManager.team_DARK_RED);
+        teams.add(scoreboardManager.team_GOLD);
+        teams.add(scoreboardManager.team_GREEN);
+        teams.add(scoreboardManager.team_RED);
+        teams.add(scoreboardManager.team_YELLOW);
         e.setGlowing(true);
         Random random = new Random();
         int interval = this.getConfig().getInt("rainbow-interval");
@@ -914,7 +913,7 @@ public final class ItemGlow extends JavaPlugin {
     public void setFlashy(Entity e, String color){
         int interval = this.getConfig().getInt("flashy-interval");
         String team_name = "team_" + color;
-        Team team = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(team_name);
+        Team team = scoreboardManager.getTeam(team_name);
         team.addEntry(e.getUniqueId().toString());
         Bukkit.getScheduler().runTaskTimerAsynchronously(instance, new Runnable() {
             @Override
